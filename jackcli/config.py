@@ -33,7 +33,7 @@ class RedshiftConfig:
         if missing:
             raise EnvironmentError(
                 f"Missing required environment variables: {', '.join(missing)}\n"
-                "Set them before running rsops, e.g.:\n"
+                "Set them before running jack, e.g.:\n"
                 "  export REDSHIFT_HOST=my-cluster.xxxx.us-east-1.redshift.amazonaws.com\n"
                 "  export REDSHIFT_DATABASE=dev\n"
                 "  export REDSHIFT_USER=admin\n"

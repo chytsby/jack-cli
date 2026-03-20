@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jackcli"
-version = "0.1.0"
+version = "0.2.0"
 description = "Redshift AI-Native Operations CLI — wraps common DBA maintenance queries into a human-friendly and AI-parseable interface."
 requires-python = ">=3.10"
 dependencies = [

@@ -1,0 +1,94 @@
+==================================================
+  jack-cli v0.2.0 DB Survey v2
+  host: singapore-prd-datalakehouse-redshift-cluster-1.cuswnymapmyu.ap-southeast-1.redshift.amazonaws.com
+  user: datalake_op
+==================================================
+
+Connection: OK
+
+=== A. vw_tbl_stat_max_column_value ===
+
+>>> A01 view columns
+  column_name | data_type
+  ------------+----------
+  (0 rows)
+
+>>> A02 sample rows (top 5)
+  id | data_src_name | db_name | schema_name | table_name | column_name | max_column_value | max_column_value_todate | sort_key_flag | data_granularity_type | data_offset | benchmark_value | etl_created_dtm
+  ---+---------------+---------+-------------+------------+-------------+------------------+-------------------------+---------------+-----------------------+-------------+-----------------+----------------
+  1 | crm | dwa | dwh | crm_mbr_prof | reg_dtm | 2025-12-14 23:42:12 | 2025-12-14 | True | D | -1 | 2026-03-19 | 2026-03-20 08:30:38
+  2 | crm | dwa | dwh | crm_mbr_prof_ext_gmal | reg_dt | 2026-03-18 | 2026-03-18 | True | D | -1 | 2026-03-19 | 2026-03-20 08:30:38
+  3 | crm | dwa | dwh | crm_mbr_prof_ext_lineoa | created_dtm | 2026-03-20 01:25:42 | 2026-03-20 | True | D | -1 | 2026-03-19 | 2026-03-20 08:30:38
+  4 | mkt | dwa | dwh | mkt_gmal_acty_ddc_bind | bind_dt | 2026-03-19 | 2026-03-19 | True | D | -1 | 2026-03-19 | 2026-03-20 08:30:38
+  5 | mkt | dwa | dwh | mkt_gmal_acty_ddc_issue | issued_dt | 2026-03-19 | 2026-03-19 | True | D | -1 | 2026-03-19 | 2026-03-20 08:30:38
+
+=== B. vw_etl_entity_prof ===
+
+>>> B01 view columns
+  column_name | data_type
+  ------------+----------
+  (0 rows)
+
+>>> B02 sample rows (top 5, failed only)
+  schema_name | table_name | last_exec_dtm | status_id
+  ------------+------------+---------------+----------
+  ods | plexure_loyaltypointsbonusbreakdowndetails | 2025-08-06 20:05:11 | 9
+  ods | mds_orderitem | 2025-10-08 09:58:34 | 9
+
+>>> B03 sample rows (top 5, all)
+  schema_name | table_name | last_exec_dtm | status_id
+  ------------+------------+---------------+----------
+  ods | member_trans | 2026-03-20 12:34:16 | 0
+  ods | member_transdtl | 2026-03-20 12:33:52 | 0
+  dm | ind_prod_behavior_gmal | 2026-03-20 11:42:40 | 0
+  dm | dwd_txn_sales_item | 2026-03-20 11:38:11 | 0
+  dm | rpt_gmal_offer_bank | 2026-03-20 11:29:12 | 0
+
+=== C. etl_table_config ===
+
+>>> C01 columns
+  column_name | data_type
+  ------------+----------
+  source_name | character varying
+  source_database_name | character varying
+  source_schema_name | character varying
+  source_table_name | character varying
+  stg_database_name | character varying
+  stg_schema_name | character varying
+  stg_table_name | character varying
+  ods_database_name | character varying
+  ods_schema_name | character varying
+  ods_table_name | character varying
+  etl_table_type | character varying
+  merge_key | character varying
+  delta_key | character varying
+  delta_key_offset | smallint
+
+>>> C02 sample rows (top 5)
+  source_name | source_database_name | source_schema_name | source_table_name | stg_database_name | stg_schema_name | stg_table_name | ods_database_name | ods_schema_name | ods_table_name | etl_table_type | merge_key | delta_key | delta_key_offset
+  ------------+----------------------+--------------------+-------------------+-------------------+-----------------+----------------+-------------------+-----------------+----------------+----------------+-----------+-----------+-----------------
+  Lineoaec | dwa | stg | vw_lineoaec_item | dwa | stg | lineoaec_item | dwa | ods | lineoaec_item | F | ID | None | None
+  Lineoaec | dwa | stg | vw_lineoaec_itemcoupon | dwa | stg | lineoaec_itemcoupon | dwa | ods | lineoaec_itemcoupon | F | ID | None | None
+  Lineoaec | dwa | stg | vw_lineoaec_itemcouponlist | dwa | stg | lineoaec_itemcouponlist | dwa | ods | lineoaec_itemcouponlist | F | ID | None | None
+  Lineoaec | dwa | stg | vw_lineoaec_itemcouponpattern | dwa | stg | lineoaec_itemcouponpattern | dwa | ods | lineoaec_itemcouponpattern | F | ID | None | None
+  Lineoaec | dwa | stg | vw_lineoaec_itemcouponrecord | dwa | stg | lineoaec_itemcouponrecord | dwa | ods | lineoaec_itemcouponrecord | I | ID | updated_time | -2
+
+>>> C03 vw_etl_table_config columns
+  column_name | data_type
+  ------------+----------
+  source_name | character varying
+  source_database_name | character varying
+  source_schema_name | character varying
+  source_table_name | character varying
+  stg_database_name | character varying
+  stg_schema_name | character varying
+  stg_table_name | character varying
+  ods_database_name | character varying
+  ods_schema_name | character varying
+  ods_table_name | character varying
+  etl_table_type | character varying
+  merge_key | character varying
+  delta_key | character varying
+  delta_key_offset | smallint
+
+=== Survey v2 complete ===

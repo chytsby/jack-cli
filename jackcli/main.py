@@ -18,21 +18,16 @@ from .queries import (
     get_etl_failures,
     get_table_health,
     get_wlm_status,
-    get_datashare_status,
-    get_connections,
-    get_copy_status,
-    get_vacuum_progress,
     get_locks,
     get_spill,
-    get_alerts,
-    get_scaling,
     get_skew,
-    get_compression,
     get_deps,
     get_stale_tables,
     get_audit,
     get_mcd_etl_status,
     get_mcd_etl_log,
+    get_mcd_value_check,
+    get_mcd_etl_missing,
 )
 from .output import print_json, print_table, print_dict_as_table, console
 from .bedrock import call_bedrock
@@ -49,14 +44,14 @@ app = typer.Typer(
 
 check_app = typer.Typer(help="Health checks and routine monitoring.")
 incident_app = typer.Typer(
-    help="Incident response and diagnosis. Run without subcommand for a full report.",
+    help="Incident response. Run without subcommand for a full report.",
     invoke_without_command=True,
 )
 maintain_app = typer.Typer(
     help="Maintenance and governance. Run without subcommand for a full report.",
     invoke_without_command=True,
 )
-mcd_app = typer.Typer(help="MCD-specific custom table queries.")
+mcd_app = typer.Typer(help="MCD custom table queries.")
 
 app.add_typer(check_app, name="check")
 app.add_typer(incident_app, name="incident")
@@ -96,11 +91,11 @@ def _handle_errors(exc: Exception) -> None:
 
 @check_app.command("long-queries")
 def check_long_queries(
-    threshold: float = typer.Option(5.0, "--threshold", "-t", help="Minimum running time in minutes."),
+    threshold: float = typer.Option(10.0, "--threshold", "-t", help="Minimum duration in minutes."),
     limit: int = typer.Option(20, "--limit", "-l", help="Maximum rows to return."),
     json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
 ) -> None:
-    """Show queries running longer than THRESHOLD minutes."""
+    """Show queries from the past 14 days running longer than THRESHOLD minutes (non-ETL, SELECT only)."""
     cfg = _get_cfg()
     try:
         with get_connection(cfg) as conn:
@@ -113,9 +108,9 @@ def check_long_queries(
         print_json({"command": "long_queries", "threshold_minutes": threshold, "rows": rows})
     else:
         if not rows:
-            console.print(f"[green]No queries running longer than {threshold} minutes.[/green]")
+            console.print(f"[green]No queries longer than {threshold} minutes in the past 14 days.[/green]")
         else:
-            print_table(rows, title=f"Long-Running Queries (>{threshold} min)")
+            print_table(rows, title=f"Long-Running Queries (>{threshold} min, past 14 days)")
 
 
 @check_app.command("disk")
@@ -135,30 +130,32 @@ def check_disk(
     if json_out:
         print_json({"command": "disk", "data": data})
     else:
-        print_dict_as_table(data["cluster_summary"], title="Cluster Disk Summary")
+        print_dict_as_table(data["cluster_summary"], title="Cluster Disk Usage")
         print_table(data["top_tables"], title=f"Top {limit} Tables by Size")
 
 
 @check_app.command("etl-failures")
 def check_etl_failures(
     hours: int = typer.Option(24, "--hours", "-h", help="Look-back window in hours."),
-    limit: int = typer.Option(50, "--limit", "-l", help="Maximum rows per error type."),
+    limit: int = typer.Option(50, "--limit", "-l", help="Maximum rows."),
     json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
 ) -> None:
-    """Show ETL load errors and query failures in the last HOURS hours."""
+    """Show COPY job load errors in the last HOURS hours."""
     cfg = _get_cfg()
     try:
         with get_connection(cfg) as conn:
-            data = get_etl_failures(conn, hours=hours, limit=limit)
+            rows = get_etl_failures(conn, hours=hours, limit=limit)
     except Exception as exc:
         _handle_errors(exc)
         return
 
     if json_out:
-        print_json({"command": "etl_failures", "hours": hours, "data": data})
+        print_json({"command": "etl_failures", "hours": hours, "rows": rows})
     else:
-        print_table(data["load_errors"], title=f"Load Errors (last {hours}h)")
-        print_table(data["query_errors"], title=f"Query Errors (last {hours}h)")
+        if not rows:
+            console.print(f"[green]No COPY load errors in the last {hours}h.[/green]")
+        else:
+            print_table(rows, title=f"COPY Load Errors (last {hours}h)")
 
 
 @check_app.command("table-health")
@@ -168,7 +165,7 @@ def check_table_health(
     limit: int = typer.Option(30, "--limit", "-l", help="Maximum rows."),
     json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
 ) -> None:
-    """Show tables that need VACUUM or ANALYZE attention."""
+    """Show tables that need VACUUM or ANALYZE attention (report only — no operations executed)."""
     cfg = _get_cfg()
     try:
         with get_connection(cfg) as conn:
@@ -181,114 +178,33 @@ def check_table_health(
         print_json({"command": "table_health", "rows": rows})
     else:
         if not rows:
-            console.print("[green]All tables are healthy (within thresholds).[/green]")
+            console.print("[green]All tables are within healthy thresholds.[/green]")
         else:
-            print_table(rows, title="Tables Needing VACUUM / ANALYZE")
+            print_table(rows, title="Tables Needing VACUUM / ANALYZE (report only)")
 
 
 @check_app.command("wlm")
 def check_wlm(
+    hours: int = typer.Option(24, "--hours", "-h", help="Look-back window in hours."),
+    limit: int = typer.Option(50, "--limit", "-l", help="Maximum rows."),
     json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
 ) -> None:
-    """Show WLM queue status."""
+    """Show WLM execution history with queue times and QMR rule hits."""
     cfg = _get_cfg()
     try:
         with get_connection(cfg) as conn:
-            rows = get_wlm_status(conn)
+            rows = get_wlm_status(conn, hours=hours, limit=limit)
     except Exception as exc:
         _handle_errors(exc)
         return
 
     if json_out:
-        print_json({"command": "wlm", "rows": rows})
-    else:
-        print_table(rows, title="WLM Queue Status")
-
-
-@check_app.command("datashares")
-def check_datashares(
-    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
-) -> None:
-    """List DataShare definitions visible on this cluster."""
-    cfg = _get_cfg()
-    try:
-        with get_connection(cfg) as conn:
-            rows = get_datashare_status(conn)
-    except Exception as exc:
-        _handle_errors(exc)
-        return
-
-    if json_out:
-        print_json({"command": "datashares", "rows": rows})
+        print_json({"command": "wlm", "hours": hours, "rows": rows})
     else:
         if not rows:
-            console.print("[yellow]No DataShares found.[/yellow]")
+            console.print(f"[green]No WLM activity in the last {hours}h.[/green]")
         else:
-            print_table(rows, title="DataShare Status")
-
-
-@check_app.command("connections")
-def check_connections(
-    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
-) -> None:
-    """Show current cluster connections."""
-    cfg = _get_cfg()
-    try:
-        with get_connection(cfg) as conn:
-            rows = get_connections(conn)
-    except Exception as exc:
-        _handle_errors(exc)
-        return
-
-    if json_out:
-        print_json({"command": "connections", "rows": rows})
-    else:
-        console.print(f"[bold]Total connections:[/bold] {len(rows)}")
-        print_table(rows, title="Active Connections")
-
-
-@check_app.command("copy-status")
-def check_copy_status(
-    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
-) -> None:
-    """Show active COPY job progress."""
-    cfg = _get_cfg()
-    try:
-        with get_connection(cfg) as conn:
-            rows = get_copy_status(conn)
-    except Exception as exc:
-        _handle_errors(exc)
-        return
-
-    if json_out:
-        print_json({"command": "copy_status", "rows": rows})
-    else:
-        if not rows:
-            console.print("[green]No active COPY jobs.[/green]")
-        else:
-            print_table(rows, title="Active COPY Jobs")
-
-
-@check_app.command("vacuum-progress")
-def check_vacuum_progress(
-    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
-) -> None:
-    """Show ongoing VACUUM progress."""
-    cfg = _get_cfg()
-    try:
-        with get_connection(cfg) as conn:
-            rows = get_vacuum_progress(conn)
-    except Exception as exc:
-        _handle_errors(exc)
-        return
-
-    if json_out:
-        print_json({"command": "vacuum_progress", "rows": rows})
-    else:
-        if not rows:
-            console.print("[green]No VACUUM operations in progress.[/green]")
-        else:
-            print_table(rows, title="VACUUM Progress")
+            print_table(rows, title=f"WLM Execution (last {hours}h)")
 
 
 @check_app.command("skew")
@@ -313,30 +229,6 @@ def check_skew(
             console.print(f"[green]No tables with skew ratio > {skew_threshold}.[/green]")
         else:
             print_table(rows, title=f"Tables with Data Skew (>{skew_threshold})")
-
-
-@check_app.command("compression")
-def check_compression(
-    min_size_mb: int = typer.Option(100, "--min-size", help="Only check tables larger than N MB."),
-    limit: int = typer.Option(50, "--limit", "-l", help="Maximum rows."),
-    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
-) -> None:
-    """Show columns with no or raw encoding on large tables."""
-    cfg = _get_cfg()
-    try:
-        with get_connection(cfg) as conn:
-            rows = get_compression(conn, min_size_mb=min_size_mb, limit=limit)
-    except Exception as exc:
-        _handle_errors(exc)
-        return
-
-    if json_out:
-        print_json({"command": "compression", "rows": rows})
-    else:
-        if not rows:
-            console.print("[green]No uncompressed columns found on large tables.[/green]")
-        else:
-            print_table(rows, title="Columns Without Compression")
 
 
 @check_app.command("deps")
@@ -377,9 +269,6 @@ def incident_callback(ctx: typer.Context, json_out: bool = typer.Option(False, "
         with get_connection(cfg) as conn:
             results["locks"] = get_locks(conn)
             results["spill"] = get_spill(conn)
-            results["alerts"] = get_alerts(conn)
-            results["long_queries"] = get_long_running_queries(conn)
-            results["scaling"] = get_scaling(conn)
     except Exception as exc:
         _handle_errors(exc)
         return
@@ -389,9 +278,6 @@ def incident_callback(ctx: typer.Context, json_out: bool = typer.Option(False, "
     else:
         print_table(results["locks"], title="Locks")
         print_table(results["spill"], title="Spill to Disk")
-        print_table(results["alerts"], title="Optimizer Alerts")
-        print_table(results["long_queries"], title="Long-Running Queries")
-        print_table(results["scaling"], title="Concurrency Scaling")
 
 
 @incident_app.command("locks")
@@ -414,34 +300,6 @@ def incident_locks(
             console.print("[green]No locks detected.[/green]")
         else:
             print_table(rows, title="Lock Status")
-
-
-@incident_app.command("terminate")
-def incident_terminate(
-    pid: int = typer.Argument(..., help="Process ID to terminate."),
-    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation prompt."),
-) -> None:
-    """Terminate a query by process ID."""
-    if not force:
-        confirm = typer.confirm(f"Terminate process {pid}?")
-        if not confirm:
-            raise typer.Abort()
-
-    cfg = _get_cfg()
-    try:
-        with get_connection(cfg) as conn:
-            with conn.cursor() as cur:
-                cur.execute("SELECT pg_terminate_backend(%s)", (pid,))
-                result = cur.fetchone()
-                success = result[0] if result else False
-    except Exception as exc:
-        _handle_errors(exc)
-        return
-
-    if success:
-        console.print(f"[green]Process {pid} terminated successfully.[/green]")
-    else:
-        console.print(f"[yellow]Process {pid} not found or already finished.[/yellow]")
 
 
 @incident_app.command("spill")
@@ -468,53 +326,6 @@ def incident_spill(
             print_table(rows, title=f"Queries Spilled to Disk (last {hours}h)")
 
 
-@incident_app.command("alerts")
-def incident_alerts(
-    hours: int = typer.Option(24, "--hours", "-h", help="Look-back window in hours."),
-    limit: int = typer.Option(50, "--limit", "-l", help="Maximum rows."),
-    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
-) -> None:
-    """Show Redshift optimizer alert events."""
-    cfg = _get_cfg()
-    try:
-        with get_connection(cfg) as conn:
-            rows = get_alerts(conn, hours=hours, limit=limit)
-    except Exception as exc:
-        _handle_errors(exc)
-        return
-
-    if json_out:
-        print_json({"command": "alerts", "hours": hours, "rows": rows})
-    else:
-        if not rows:
-            console.print(f"[green]No optimizer alerts in the last {hours}h.[/green]")
-        else:
-            print_table(rows, title=f"Optimizer Alerts (last {hours}h)")
-
-
-@incident_app.command("scaling")
-def incident_scaling(
-    limit: int = typer.Option(50, "--limit", "-l", help="Maximum rows."),
-    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
-) -> None:
-    """Show concurrency scaling usage history."""
-    cfg = _get_cfg()
-    try:
-        with get_connection(cfg) as conn:
-            rows = get_scaling(conn, limit=limit)
-    except Exception as exc:
-        _handle_errors(exc)
-        return
-
-    if json_out:
-        print_json({"command": "scaling", "rows": rows})
-    else:
-        if not rows:
-            console.print("[green]No concurrency scaling events found.[/green]")
-        else:
-            print_table(rows, title="Concurrency Scaling Usage")
-
-
 # ---------------------------------------------------------------------------
 # maintain commands
 # ---------------------------------------------------------------------------
@@ -530,9 +341,8 @@ def maintain_callback(ctx: typer.Context, json_out: bool = typer.Option(False, "
     results: dict = {}
     try:
         with get_connection(cfg) as conn:
-            results["table_health"] = get_table_health(conn)
-            results["vacuum_progress"] = get_vacuum_progress(conn)
             results["stale_tables"] = get_stale_tables(conn)
+            results["audit"] = get_audit(conn)
     except Exception as exc:
         _handle_errors(exc)
         return
@@ -540,9 +350,8 @@ def maintain_callback(ctx: typer.Context, json_out: bool = typer.Option(False, "
     if json_out:
         print_json({"command": "maintain", "results": results})
     else:
-        print_table(results["table_health"], title="Tables Needing VACUUM / ANALYZE")
-        print_table(results["vacuum_progress"], title="VACUUM Progress")
         print_table(results["stale_tables"], title="Stale Backup Tables")
+        print_table(results["audit"], title="DDL Audit Log (past 7 days)")
 
 
 @maintain_app.command("stale-tables")
@@ -569,7 +378,7 @@ def maintain_stale_tables(
 
 @maintain_app.command("audit")
 def maintain_audit(
-    hours: int = typer.Option(24, "--hours", "-h", help="Look-back window in hours."),
+    hours: int = typer.Option(168, "--hours", "-h", help="Look-back window in hours (default: 168 = 7 days)."),
     limit: int = typer.Option(100, "--limit", "-l", help="Maximum rows."),
     json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
 ) -> None:
@@ -600,7 +409,7 @@ def maintain_audit(
 def mcd_etl_status(
     json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
 ) -> None:
-    """Show MCD ETL entity processing status (custom table)."""
+    """Show MCD ETL entity processing status."""
     cfg = _get_cfg()
     try:
         with get_connection(cfg) as conn:
@@ -621,7 +430,7 @@ def mcd_etl_log(
     limit: int = typer.Option(100, "--limit", "-l", help="Maximum rows."),
     json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
 ) -> None:
-    """Show MCD ETL execution log with duration (custom table)."""
+    """Show MCD ETL execution log with duration."""
     cfg = _get_cfg()
     try:
         with get_connection(cfg) as conn:
@@ -636,74 +445,166 @@ def mcd_etl_log(
         print_table(rows, title=f"MCD ETL Audit Log (last {hours}h)")
 
 
-# ---------------------------------------------------------------------------
-# Top-level commands
-# ---------------------------------------------------------------------------
-
-
-@app.command()
-def morning(
+@mcd_app.command("value-check")
+def mcd_value_check(
+    all_tables: bool = typer.Option(False, "--all", "-a", help="Show all tables, not just stale ones."),
     json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
 ) -> None:
-    """Run all morning routine checks in one shot."""
+    """Show tables where max column value is behind the expected date (data freshness check)."""
     cfg = _get_cfg()
-    results: dict = {}
     try:
         with get_connection(cfg) as conn:
-            results["disk"] = get_disk_usage(conn)
-            results["connections"] = get_connections(conn)
-            results["long_queries"] = get_long_running_queries(conn)
-            results["wlm"] = get_wlm_status(conn)
-            results["etl_failures"] = get_etl_failures(conn)
-            results["copy_status"] = get_copy_status(conn)
-            results["table_health"] = get_table_health(conn)
-            results["vacuum_progress"] = get_vacuum_progress(conn)
+            rows = get_mcd_value_check(conn, all_tables=all_tables)
     except Exception as exc:
         _handle_errors(exc)
         return
 
     if json_out:
-        print_json({"command": "morning", "results": results})
+        print_json({"command": "mcd_value_check", "all_tables": all_tables, "rows": rows})
     else:
-        print_dict_as_table(results["disk"]["cluster_summary"], title="Disk Summary")
-        console.print(f"[bold]Connections:[/bold] {len(results['connections'])}")
-        print_table(results["long_queries"], title="Long-Running Queries")
-        print_table(results["wlm"], title="WLM Status")
-        print_table(results["etl_failures"]["load_errors"], title="Load Errors (24h)")
-        print_table(results["copy_status"], title="Active COPY Jobs")
-        print_table(results["table_health"], title="Tables Needing Maintenance")
-        print_table(results["vacuum_progress"], title="VACUUM Progress")
+        if not rows:
+            console.print("[green]All tables are up to date.[/green]")
+        else:
+            title = "All Tables — Data Freshness" if all_tables else "Stale Tables (behind expected date)"
+            print_table(rows, title=title)
 
+
+@mcd_app.command("etl-missing")
+def mcd_etl_missing(
+    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
+) -> None:
+    """Show tables in ETL config that have not successfully run today."""
+    cfg = _get_cfg()
+    try:
+        with get_connection(cfg) as conn:
+            rows = get_mcd_etl_missing(conn)
+    except Exception as exc:
+        _handle_errors(exc)
+        return
+
+    if json_out:
+        print_json({"command": "mcd_etl_missing", "rows": rows})
+    else:
+        if not rows:
+            console.print("[green]All configured ETL tables have run successfully today.[/green]")
+        else:
+            print_table(rows, title="ETL Missing / Failed (not successfully run today)")
+
+
+# ---------------------------------------------------------------------------
+# Composite commands
+# ---------------------------------------------------------------------------
+
+
+@app.command()
+def daily(
+    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
+) -> None:
+    """Run all daily checks: wlm, etl-failures, mcd etl-status, mcd etl-log, mcd value-check."""
+    cfg = _get_cfg()
+    results: dict = {}
+    try:
+        with get_connection(cfg) as conn:
+            results["wlm"] = get_wlm_status(conn)
+            results["etl_failures"] = get_etl_failures(conn)
+            results["mcd_etl_status"] = get_mcd_etl_status(conn)
+            results["mcd_etl_log"] = get_mcd_etl_log(conn)
+            results["mcd_value_check"] = get_mcd_value_check(conn)
+    except Exception as exc:
+        _handle_errors(exc)
+        return
+
+    if json_out:
+        print_json({"command": "daily", "results": results})
+    else:
+        print_table(results["wlm"], title="WLM (last 24h)")
+        print_table(results["etl_failures"], title="COPY Load Errors (last 24h)")
+        print_table(results["mcd_etl_status"], title="MCD ETL Status")
+        print_table(results["mcd_etl_log"], title="MCD ETL Log (last 24h)")
+        if not results["mcd_value_check"]:
+            console.print("[green]Value Check: all tables up to date.[/green]")
+        else:
+            print_table(results["mcd_value_check"], title="Value Check — Stale Tables")
+
+
+@app.command()
+def weekly(
+    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
+) -> None:
+    """Run all weekly checks: long-queries, stale-tables, audit."""
+    cfg = _get_cfg()
+    results: dict = {}
+    try:
+        with get_connection(cfg) as conn:
+            results["long_queries"] = get_long_running_queries(conn)
+            results["stale_tables"] = get_stale_tables(conn)
+            results["audit"] = get_audit(conn)
+    except Exception as exc:
+        _handle_errors(exc)
+        return
+
+    if json_out:
+        print_json({"command": "weekly", "results": results})
+    else:
+        print_table(results["long_queries"], title="Long-Running Queries (past 14 days)")
+        print_table(results["stale_tables"], title="Stale Backup Tables")
+        print_table(results["audit"], title="DDL Audit Log (past 7 days)")
+
+
+@app.command()
+def monthly(
+    json_out: bool = typer.Option(False, "--json", "-j", help="Output as JSON."),
+) -> None:
+    """Run all monthly checks: disk, table-health, skew."""
+    cfg = _get_cfg()
+    results: dict = {}
+    try:
+        with get_connection(cfg) as conn:
+            results["disk"] = get_disk_usage(conn)
+            results["table_health"] = get_table_health(conn)
+            results["skew"] = get_skew(conn)
+    except Exception as exc:
+        _handle_errors(exc)
+        return
+
+    if json_out:
+        print_json({"command": "monthly", "results": results})
+    else:
+        print_dict_as_table(results["disk"]["cluster_summary"], title="Cluster Disk Usage")
+        print_table(results["disk"]["top_tables"], title="Top Tables by Size")
+        print_table(results["table_health"], title="Tables Needing VACUUM / ANALYZE (report only)")
+        print_table(results["skew"], title="Tables with Data Skew")
+
+
+# ---------------------------------------------------------------------------
+# explain + config
+# ---------------------------------------------------------------------------
 
 _COMMAND_TO_CLI: dict[str, str] = {
-    "long_queries":    "jack check long-queries",
-    "disk":            "jack check disk",
-    "etl_failures":    "jack check etl-failures",
-    "table_health":    "jack check table-health",
-    "wlm":             "jack check wlm",
-    "datashares":      "jack check datashares",
-    "connections":     "jack check connections",
-    "copy_status":     "jack check copy-status",
-    "vacuum_progress": "jack check vacuum-progress",
-    "locks":           "jack incident locks",
-    "spill":           "jack incident spill",
-    "alerts":          "jack incident alerts",
-    "scaling":         "jack incident scaling",
-    "skew":            "jack check skew",
-    "compression":     "jack check compression",
-    "deps":            "jack check deps",
-    "stale_tables":    "jack maintain stale-tables",
-    "audit":           "jack maintain audit",
-    "mcd_etl_status":  "jack mcd etl-status",
-    "mcd_etl_log":     "jack mcd etl-log",
-    "morning":         "jack morning",
-    "incident":        "jack incident",
-    "maintain":        "jack maintain",
+    "long_queries":     "jack check long-queries",
+    "disk":             "jack check disk",
+    "etl_failures":     "jack check etl-failures",
+    "table_health":     "jack check table-health",
+    "wlm":              "jack check wlm",
+    "skew":             "jack check skew",
+    "locks":            "jack incident locks",
+    "spill":            "jack incident spill",
+    "deps":             "jack check deps",
+    "stale_tables":     "jack maintain stale-tables",
+    "audit":            "jack maintain audit",
+    "mcd_etl_status":   "jack mcd etl-status",
+    "mcd_etl_log":      "jack mcd etl-log",
+    "mcd_value_check":  "jack mcd value-check",
+    "mcd_etl_missing":  "jack mcd etl-missing",
+    "incident":         "jack incident",
+    "maintain":         "jack maintain",
+    "daily":            "jack daily",
+    "weekly":           "jack weekly",
+    "monthly":          "jack monthly",
 }
 
 
 def _data_to_markdown_tables(data: dict) -> str:
-    """Convert JSON payload rows/data into Markdown tables."""
     import datetime as _dt
     from decimal import Decimal as _Dec
 
@@ -730,7 +631,6 @@ def _data_to_markdown_tables(data: dict) -> str:
         return "\n".join(lines)
 
     sections = []
-    # Handle nested structures (morning / incident / maintain)
     results = data.get("results") or data.get("data")
     if isinstance(results, dict):
         for key, val in results.items():
@@ -806,20 +706,18 @@ def explain(
 @app.command()
 def config() -> None:
     """Show current effective configuration (Redshift + Bedrock)."""
-    import os as _os
-
     redshift_vars = {
-        "REDSHIFT_HOST": _os.environ.get("REDSHIFT_HOST", "[not set]"),
-        "REDSHIFT_PORT": _os.environ.get("REDSHIFT_PORT", "5439 (default)"),
-        "REDSHIFT_DATABASE": _os.environ.get("REDSHIFT_DATABASE", "[not set]"),
-        "REDSHIFT_USER": _os.environ.get("REDSHIFT_USER", "[not set]"),
-        "REDSHIFT_PASSWORD": "***" if _os.environ.get("REDSHIFT_PASSWORD") else "[not set]",
+        "REDSHIFT_HOST":     os.environ.get("REDSHIFT_HOST", "[not set]"),
+        "REDSHIFT_PORT":     os.environ.get("REDSHIFT_PORT", "5439 (default)"),
+        "REDSHIFT_DATABASE": os.environ.get("REDSHIFT_DATABASE", "[not set]"),
+        "REDSHIFT_USER":     os.environ.get("REDSHIFT_USER", "[not set]"),
+        "REDSHIFT_PASSWORD": "***" if os.environ.get("REDSHIFT_PASSWORD") else "[not set]",
     }
     bedrock_vars = {
-        "AWS_DEFAULT_REGION": _os.environ.get("AWS_DEFAULT_REGION", "ap-southeast-1 (default)"),
-        "AWS_ACCESS_KEY_ID": "***" if _os.environ.get("AWS_ACCESS_KEY_ID") else "[not set]",
-        "AWS_SECRET_ACCESS_KEY": "***" if _os.environ.get("AWS_SECRET_ACCESS_KEY") else "[not set]",
-        "BEDROCK_MODEL": _os.environ.get("BEDROCK_MODEL", "amazon.nova-pro-v1:0"),
+        "AWS_DEFAULT_REGION":    os.environ.get("AWS_DEFAULT_REGION", "ap-southeast-1 (default)"),
+        "AWS_ACCESS_KEY_ID":     "***" if os.environ.get("AWS_ACCESS_KEY_ID") else "[not set]",
+        "AWS_SECRET_ACCESS_KEY": "***" if os.environ.get("AWS_SECRET_ACCESS_KEY") else "[not set]",
+        "BEDROCK_MODEL":         os.environ.get("BEDROCK_MODEL", "apac.amazon.nova-pro-v1:0 (default)"),
     }
 
     print_dict_as_table(redshift_vars, title="Redshift Configuration")

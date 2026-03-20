@@ -1,0 +1,158 @@
+==================================================
+  jack-cli v0.2.0 DB Survey
+  host: singapore-prd-datalakehouse-redshift-cluster-1.cuswnymapmyu.ap-southeast-1.redshift.amazonaws.com
+  user: datalake_op
+==================================================
+
+Connection: OK
+
+=== A. System view permissions ===
+
+>>> A01 svv_table_info
+  v | count
+  --+------
+  svv_table_info | 0
+
+>>> A02 vw_tbl_query_log
+  v | count
+  --+------
+  vw_tbl_query_log | 0
+
+>>> A03 stl_wlm_query
+  v | count
+  --+------
+  stl_wlm_query | 0
+
+>>> A04 stl_wlm_rule_action
+  v | count
+  --+------
+  stl_wlm_rule_action | 0
+
+>>> A05 stl_querytext
+  v | count
+  --+------
+  stl_querytext | 0
+
+>>> A06 stl_load_errors
+  v | count
+  --+------
+  stl_load_errors | 0
+
+>>> A07 stl_error
+  v | count
+  --+------
+  stl_error | 0
+
+>>> A08 pg_locks
+  v | count
+  --+------
+  pg_locks | 0
+
+>>> A09 pg_class
+  v | count
+  --+------
+  pg_class | 0
+
+>>> A10 stv_sessions
+  v | count
+  --+------
+  stv_sessions | 0
+
+>>> A11 stv_recents
+  v | count
+  --+------
+  stv_recents | 0
+
+>>> A12 stl_query
+  v | count
+  --+------
+  stl_query | 0
+
+>>> A13 stl_query_metrics
+  v | count
+  --+------
+  stl_query_metrics | 0
+
+>>> A14 stl_ddltext
+  v | count
+  --+------
+  stl_ddltext | 0
+
+>>> A15 pg_proc
+  v | count
+  --+------
+  pg_proc | 0
+
+>>> A16 information_schema.views
+  v | count
+  --+------
+  information_schema.views | 0
+
+>>> A17 etl_entity_prof
+  v | count
+  --+------
+  etl_entity_prof | 0
+
+>>> A18 etl_audit_log
+  v | count
+  --+------
+  etl_audit_log | 0
+
+=== B. Custom table columns ===
+
+>>> B01 vw_tbl_query_log columns
+  column_name | data_type
+  ------------+----------
+  (0 rows)
+
+>>> B02 etl_entity_prof columns
+  column_name | data_type
+  ------------+----------
+  schema_name | character varying
+  table_name | character varying
+  last_exec_dtm | timestamp without time zone
+  status_id | integer
+
+>>> B03 etl_audit_log columns
+  column_name | data_type
+  ------------+----------
+  id | bigint
+  schema_name | character varying
+  table_name | character varying
+  exec_start_dtm | timestamp without time zone
+  exec_end_dtm | timestamp without time zone
+  status_id | integer
+  src_file_name | character varying
+  msg | character varying
+  status_id_string | character varying
+  id_string | character varying
+
+=== C. All objects in sys schema ===
+
+>>> C01 sys schema tables
+  table_name | table_type
+  -----------+-----------
+  etl_audit_log | BASE TABLE
+  etl_entity_prof | BASE TABLE
+  etl_table_config | BASE TABLE
+  etl_table_snapshot_config | BASE TABLE
+  tbl_query_log | BASE TABLE
+  tbl_stat_max_column_value | BASE TABLE
+  vw_etl_entity_prof | VIEW
+  vw_etl_table_config | VIEW
+  vw_find_dropuser_objs | VIEW
+  vw_generate_user_grant_revoke_ddl | VIEW
+  vw_generate_view_ddl | VIEW
+  vw_svv_table_info | VIEW
+  vw_sys_query_history_p1m | VIEW
+  vw_tbl_query_log | VIEW
+  vw_tbl_stat_max_column_value | VIEW
+
+=== D. Schema privileges for datalake_op ===
+
+>>> D01 schema privileges
+  schema_name | privilege_type | identity_name
+  ------------+----------------+--------------
+  (0 rows)
+
+=== Survey complete ===

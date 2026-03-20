@@ -1,0 +1,368 @@
+                                                            DDL Audit Log (last 168h)                                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ event_time                 ┃ username     ┃ ddl_text                                                                                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ 2026-03-20 06:20:15.345813 │ datalake_etl │ date" FROM "ods"."mv_tbl__mv_mrms_etllsntimemapping__0" AS "derived_table1")                      │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:15.345813 │ datalake_etl │ CREATE OR REPLACE VIEW "ods"."mv_mrms_etllsntimemapping" AS (SELECT "derived_table1"."__$etl_lsn" │
+│                            │              │ AS "__$etl_lsn", "derived_table1"."rundate" AS "rundate", "derived_table1"."completedate" AS      │
+│                            │              │ "complete                                                                                         │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:15.342294 │ datalake_etl │ ALTER TABLE "ods"."mv_tbl__mv_mrms_etllsntimemapping__0_recomputed" RENAME TO                     │
+│                            │              │ "mv_tbl__mv_mrms_etllsntimemapping__0"                                                            │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:15.225249 │ datalake_etl │ DROP TABLE "ods"."mv_tbl__mv_mrms_etllsntimemapping__0"                                           │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:15.222795 │ datalake_etl │ CREATE OR REPLACE VIEW "ods"."mv_mrms_etllsntimemapping" AS (SELECT "derived_table1"."__$etl_lsn" │
+│                            │              │ AS "__$etl_lsn", "derived_table1"."rundate" AS "rundate", "derived_table1"."completedate" AS      │
+│                            │              │ "complete                                                                                         │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:15.222795 │ datalake_etl │ date" FROM "ods"."mv_tbl__mv_mrms_etllsntimemapping__0_recomputed" AS "derived_table1")           │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:10.619917 │ datalake_etl │ te" timestamp without time zone not null  encode delta, "completedate" timestamp without time     │
+│                            │              │ zone encode delta, primary key("rundate")) distkey("rundate") sortkey("__$etl_lsn", "rundate");   │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:10.619917 │ datalake_etl │ /* DS REDSHIFT LOCAL INTERNAL QUERY */ CREATE TEMP TABLE                                          │
+│                            │              │ "t_rslocal_960191105040:b5788bc2-f2e9-448c-87f9-9719c4d9e640@101335@39605499@" ("__$etl_lsn"      │
+│                            │              │ character varying(20) not null  encode lzo, "runda                                                │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.883774 │ datalake_etl │ sc_type_code" integer encode az64, "non_prod_type_code" integer encode az64, "etl_created_dtm"    │
+│                            │              │ timestamp without time zone not null  encode az64) diststyle ALL;                                 │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.883774 │ datalake_etl │ ype" character varying(50) encode lzo, "meal_type_code" integer encode az64, "food_type_code"     │
+│                            │              │ integer encode az64, "flavor_type_code" integer encode az64, "day_part_type_code" integer encode  │
+│                            │              │ az64, "di                                                                                         │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.883774 │ datalake_etl │ /* DS REDSHIFT LOCAL INTERNAL QUERY */ CREATE TEMP TABLE "t_rslocal_localhost@5929295@4281548@"   │
+│                            │              │ ("item_code" character varying(20) not null  encode lzo, "meal_type" character varying(50) encode │
+│                            │              │ lzo, "                                                                                            │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.883774 │ datalake_etl │ food_type" character varying(50) encode lzo, "flavor_type" character varying(50) encode lzo,      │
+│                            │              │ "day_part_type" character varying(50) encode lzo, "disc_type" character varying(50) encode lzo,   │
+│                            │              │ "non_prod_t                                                                                       │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.881698 │ datalake_etl │ ING                                                                                               │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.881698 │ datalake_etl │ /* DS REDSHIFT LOCAL INTERNAL QUERY */ CREATE VIEW "#dwa_dwh_vw_sls_prod_group_827302809857566"   │
+│                            │              │ AS SELECT dwa.dwh.sls_prod_group.item_code, dwa.dwh.sls_prod_group.meal_type,                     │
+│                            │              │ dwa.dwh.sls_prod_group.foo                                                                        │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.881698 │ datalake_etl │ d_type, dwa.dwh.sls_prod_group.flavor_type, dwa.dwh.sls_prod_group.day_part_type,                 │
+│                            │              │ dwa.dwh.sls_prod_group.disc_type, dwa.dwh.sls_prod_group.non_prod_type FROM                       │
+│                            │              │ dwa.dwh.sls_prod_group WITH NO SCHEMA BIND                                                        │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.876196 │ datalake_etl │ er encode az64, "platform" character varying(100) encode bytedict, "positem_code" integer encode  │
+│                            │              │ az64, "crew_qty" smallint encode az64, "nodisc_qty" smallint encode az64, "disc_qty" smallint     │
+│                            │              │ encode az                                                                                         │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.876196 │ datalake_etl │ 64, "eml_qty" smallint encode az64, "prmntn_qty" smallint encode az64, "waste_qty" smallint       │
+│                            │              │ encode az64, "eatin_qty" smallint encode az64, "takeout_qty" smallint encode az64, "net_price"    │
+│                            │              │ double precis                                                                                     │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.876196 │ datalake_etl │ /* DS REDSHIFT LOCAL INTERNAL QUERY */ CREATE TEMP TABLE "t_rslocal_localhost@2092829@4257407@"   │
+│                            │              │ ("yyyy" smallint encode az64, "business_dt" timestamp without time zone encode raw,               │
+│                            │              │ "store_number" integ                                                                              │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.876196 │ datalake_etl │ ion encode raw, "prc" smallint encode az64, "total_qty" smallint encode az64, "pns" double        │
+│                            │              │ precision encode raw, "nps" double precision encode raw, "sold_cost" double precision encode raw, │
+│                            │              │ "unit_sold"                                                                                       │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.876196 │ datalake_etl │ smallint encode az64) diststyle EVEN sortkey("business_dt");                                      │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.870734 │ datalake_etl │ a.ods.eis2_vwpmxusageplatform.store_number, dwa.ods.eis2_vwpmxusageplatform.platform,             │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.positem_code, dwa.ods.eis2_vwpmxusageplatform.crew_qty,           │
+│                            │              │ dwa.ods.eis2_vwpmxusagepla                                                                        │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.870734 │ datalake_etl │ tform.nodisc_qty, dwa.ods.eis2_vwpmxusageplatform.disc_qty,                                       │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.eml_qty, dwa.ods.eis2_vwpmxusageplatform.prmntn_qty,              │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.waste_qty, dwa.ods.eis2                                           │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.870734 │ datalake_etl │ NO SCHEMA BINDING                                                                                 │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.870734 │ datalake_etl │ _vwpmxusageplatform.eatin_qty, dwa.ods.eis2_vwpmxusageplatform.takeout_qty,                       │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.net_price, dwa.ods.eis2_vwpmxusageplatform.prc,                   │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.total_qty, d                                                      │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.870734 │ datalake_etl │ /* DS REDSHIFT LOCAL INTERNAL QUERY */ CREATE VIEW                                                │
+│                            │              │ "#dwa_ods_vw_eis2_vwpmxusageplatform_827302809857566" AS SELECT                                   │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.yyyy, dwa.ods.eis2_vwpmxusageplatform.business_dt, dw             │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:20:09.870734 │ datalake_etl │ wa.ods.eis2_vwpmxusageplatform.pns, dwa.ods.eis2_vwpmxusageplatform.nps,                          │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.sold_cost, dwa.ods.eis2_vwpmxusageplatform.unit_sold FROM         │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform WITH                                                              │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.495609 │ datalake_etl │ ype" character varying(50) encode lzo, "meal_type_code" integer encode az64, "food_type_code"     │
+│                            │              │ integer encode az64, "flavor_type_code" integer encode az64, "day_part_type_code" integer encode  │
+│                            │              │ az64, "di                                                                                         │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.495609 │ datalake_etl │ /* DS REDSHIFT LOCAL INTERNAL QUERY */ CREATE TEMP TABLE "t_rslocal_localhost@5929295@4281548@"   │
+│                            │              │ ("item_code" character varying(20) not null  encode lzo, "meal_type" character varying(50) encode │
+│                            │              │ lzo, "                                                                                            │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.495609 │ datalake_etl │ sc_type_code" integer encode az64, "non_prod_type_code" integer encode az64, "etl_created_dtm"    │
+│                            │              │ timestamp without time zone not null  encode az64) diststyle ALL;                                 │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.495609 │ datalake_etl │ food_type" character varying(50) encode lzo, "flavor_type" character varying(50) encode lzo,      │
+│                            │              │ "day_part_type" character varying(50) encode lzo, "disc_type" character varying(50) encode lzo,   │
+│                            │              │ "non_prod_t                                                                                       │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.493453 │ datalake_etl │ ING                                                                                               │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.493453 │ datalake_etl │ /* DS REDSHIFT LOCAL INTERNAL QUERY */ CREATE VIEW "#dwa_dwh_vw_sls_prod_group_827302701468505"   │
+│                            │              │ AS SELECT dwa.dwh.sls_prod_group.item_code, dwa.dwh.sls_prod_group.meal_type,                     │
+│                            │              │ dwa.dwh.sls_prod_group.foo                                                                        │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.493453 │ datalake_etl │ d_type, dwa.dwh.sls_prod_group.flavor_type, dwa.dwh.sls_prod_group.day_part_type,                 │
+│                            │              │ dwa.dwh.sls_prod_group.disc_type, dwa.dwh.sls_prod_group.non_prod_type FROM                       │
+│                            │              │ dwa.dwh.sls_prod_group WITH NO SCHEMA BIND                                                        │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.487984 │ datalake_etl │ er encode az64, "platform" character varying(100) encode bytedict, "positem_code" integer encode  │
+│                            │              │ az64, "crew_qty" smallint encode az64, "nodisc_qty" smallint encode az64, "disc_qty" smallint     │
+│                            │              │ encode az                                                                                         │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.487984 │ datalake_etl │ 64, "eml_qty" smallint encode az64, "prmntn_qty" smallint encode az64, "waste_qty" smallint       │
+│                            │              │ encode az64, "eatin_qty" smallint encode az64, "takeout_qty" smallint encode az64, "net_price"    │
+│                            │              │ double precis                                                                                     │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.487984 │ datalake_etl │ ion encode raw, "prc" smallint encode az64, "total_qty" smallint encode az64, "pns" double        │
+│                            │              │ precision encode raw, "nps" double precision encode raw, "sold_cost" double precision encode raw, │
+│                            │              │ "unit_sold"                                                                                       │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.487984 │ datalake_etl │ smallint encode az64) diststyle EVEN sortkey("business_dt");                                      │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.487984 │ datalake_etl │ /* DS REDSHIFT LOCAL INTERNAL QUERY */ CREATE TEMP TABLE "t_rslocal_localhost@2092829@4257407@"   │
+│                            │              │ ("yyyy" smallint encode az64, "business_dt" timestamp without time zone encode raw,               │
+│                            │              │ "store_number" integ                                                                              │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.482388 │ datalake_etl │ _vwpmxusageplatform.eatin_qty, dwa.ods.eis2_vwpmxusageplatform.takeout_qty,                       │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.net_price, dwa.ods.eis2_vwpmxusageplatform.prc,                   │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.total_qty, d                                                      │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.482388 │ datalake_etl │ tform.nodisc_qty, dwa.ods.eis2_vwpmxusageplatform.disc_qty,                                       │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.eml_qty, dwa.ods.eis2_vwpmxusageplatform.prmntn_qty,              │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.waste_qty, dwa.ods.eis2                                           │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.482388 │ datalake_etl │ a.ods.eis2_vwpmxusageplatform.store_number, dwa.ods.eis2_vwpmxusageplatform.platform,             │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.positem_code, dwa.ods.eis2_vwpmxusageplatform.crew_qty,           │
+│                            │              │ dwa.ods.eis2_vwpmxusagepla                                                                        │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.482388 │ datalake_etl │ wa.ods.eis2_vwpmxusageplatform.pns, dwa.ods.eis2_vwpmxusageplatform.nps,                          │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.sold_cost, dwa.ods.eis2_vwpmxusageplatform.unit_sold FROM         │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform WITH                                                              │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.482388 │ datalake_etl │ NO SCHEMA BINDING                                                                                 │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:18:21.482388 │ datalake_etl │ /* DS REDSHIFT LOCAL INTERNAL QUERY */ CREATE VIEW                                                │
+│                            │              │ "#dwa_ods_vw_eis2_vwpmxusageplatform_827302701468505" AS SELECT                                   │
+│                            │              │ dwa.ods.eis2_vwpmxusageplatform.yyyy, dwa.ods.eis2_vwpmxusageplatform.business_dt, dw             │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.568660 │ datalake_etl │ transactionsaleitemid", "derived_table1"."saledatetime" AS "saledatetime",                        │
+│                            │              │ "derived_table1"."storeid" AS "storeid", "derived_table1"."saleitemid" AS "saleitemid",           │
+│                            │              │ "derived_table1"."quantity" AS "quant                                                             │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.568660 │ datalake_etl │ CREATE OR REPLACE VIEW "public"."mv_mrms_transactionsaleitem_breakfast_after_2024" AS (SELECT     │
+│                            │              │ "derived_table1"."transactionsaleid" AS "transactionsaleid",                                      │
+│                            │              │ "derived_table1"."transactionsaleitemid" AS "                                                     │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.568660 │ datalake_etl │ nfo1", "derived_table1"."otherinfo2" AS "otherinfo2", "derived_table1"."otherinfo3" AS            │
+│                            │              │ "otherinfo3" FROM "public"."mv_tbl__mv_mrms_transactionsaleitem_breakfast_after_2024__0" AS       │
+│                            │              │ "derived_table1")                                                                                 │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.568660 │ datalake_etl │ _lsn" AS "__$etl_lsn", "derived_table1"."isnonproduct" AS "isnonproduct",                         │
+│                            │              │ "derived_table1"."taxrate" AS "taxrate", "derived_table1"."taxcodeid" AS "taxcodeid",             │
+│                            │              │ "derived_table1"."otherinfo1" AS "otheri                                                          │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.568660 │ datalake_etl │ enceno" AS "sequenceno", "derived_table1"."postransactionid" AS "postransactionid",               │
+│                            │              │ "derived_table1"."clerkkey" AS "clerkkey", "derived_table1"."businessday" AS "businessday",       │
+│                            │              │ "derived_table1"."__$etl                                                                          │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.568660 │ datalake_etl │ ity", "derived_table1"."amount" AS "amount", "derived_table1"."tax" AS "tax",                     │
+│                            │              │ "derived_table1"."salescost" AS "salescost", "derived_table1"."registernumber" AS                 │
+│                            │              │ "registernumber", "derived_table1"."sequ                                                          │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.564729 │ datalake_etl │ ALTER TABLE "public"."mv_tbl__mv_mrms_transactionsaleitem_breakfast_after_2024__0_recomputed"     │
+│                            │              │ RENAME TO "mv_tbl__mv_mrms_transactionsaleitem_breakfast_after_2024__0"                           │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.561297 │ datalake_etl │ DROP TABLE "public"."mv_tbl__mv_mrms_transactionsaleitem_breakfast_after_2024__0"                 │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.555778 │ datalake_etl │ _lsn" AS "__$etl_lsn", "derived_table1"."isnonproduct" AS "isnonproduct",                         │
+│                            │              │ "derived_table1"."taxrate" AS "taxrate", "derived_table1"."taxcodeid" AS "taxcodeid",             │
+│                            │              │ "derived_table1"."otherinfo1" AS "otheri                                                          │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.555778 │ datalake_etl │ enceno" AS "sequenceno", "derived_table1"."postransactionid" AS "postransactionid",               │
+│                            │              │ "derived_table1"."clerkkey" AS "clerkkey", "derived_table1"."businessday" AS "businessday",       │
+│                            │              │ "derived_table1"."__$etl                                                                          │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.555778 │ datalake_etl │ CREATE OR REPLACE VIEW "public"."mv_mrms_transactionsaleitem_breakfast_after_2024" AS (SELECT     │
+│                            │              │ "derived_table1"."transactionsaleid" AS "transactionsaleid",                                      │
+│                            │              │ "derived_table1"."transactionsaleitemid" AS "                                                     │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.555778 │ datalake_etl │ able1")                                                                                           │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.555778 │ datalake_etl │ transactionsaleitemid", "derived_table1"."saledatetime" AS "saledatetime",                        │
+│                            │              │ "derived_table1"."storeid" AS "storeid", "derived_table1"."saleitemid" AS "saleitemid",           │
+│                            │              │ "derived_table1"."quantity" AS "quant                                                             │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.555778 │ datalake_etl │ ity", "derived_table1"."amount" AS "amount", "derived_table1"."tax" AS "tax",                     │
+│                            │              │ "derived_table1"."salescost" AS "salescost", "derived_table1"."registernumber" AS                 │
+│                            │              │ "registernumber", "derived_table1"."sequ                                                          │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:59.555778 │ datalake_etl │ nfo1", "derived_table1"."otherinfo2" AS "otherinfo2", "derived_table1"."otherinfo3" AS            │
+│                            │              │ "otherinfo3" FROM                                                                                 │
+│                            │              │ "public"."mv_tbl__mv_mrms_transactionsaleitem_breakfast_after_2024__0_recomputed" AS "derived_t   │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.229645 │ datalake_etl │ "returnedquantity", "derived_table1"."purchaseunitid" AS "purchaseunitid",                        │
+│                            │              │ "derived_table1"."purchaseunitprice" AS "purchaseunitprice", "derived_table1"."purchasevalue" AS  │
+│                            │              │ "purchasevalue", "derived_t                                                                       │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.229645 │ datalake_etl │ ved_table1"."__$etl_lsn" AS "__$etl_lsn", "derived_table1"."overreceive" AS "overreceive",        │
+│                            │              │ "derived_table1"."short" AS "short", "derived_table1"."damaged" AS "damaged",                     │
+│                            │              │ "derived_table1"."lowquality" A                                                                   │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.229645 │ datalake_etl │ S "lowquality", "derived_table1"."overshelf" AS "overshelf",                                      │
+│                            │              │ "derived_table1"."vendorshippedquantity" AS "vendorshippedquantity",                              │
+│                            │              │ "derived_table1"."sellunitid" AS "sellunitid", "derived_table1"."itemt                            │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.229645 │ datalake_etl │ "orderedquantity" AS "orderedquantity", "derived_table1"."deliveredquantity" AS                   │
+│                            │              │ "deliveredquantity", "derived_table1"."backorderquantity" AS "backorderquantity",                 │
+│                            │              │ "derived_table1"."returnedquantity" AS                                                            │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.229645 │ datalake_etl │ able1"."taxvalue" AS "taxvalue", "derived_table1"."taxpercentage" AS "taxpercentage",             │
+│                            │              │ "derived_table1"."inventoryunitid" AS "inventoryunitid",                                          │
+│                            │              │ "derived_table1"."orderedbaseinventoryquantity" AS "order                                         │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.229645 │ datalake_etl │ id" AS "inventorypurchaseorderid", "derived_table1"."vendorinventoryitemcode" AS                  │
+│                            │              │ "vendorinventoryitemcode", "derived_table1"."inventoryitemdescription" AS                         │
+│                            │              │ "inventoryitemdescription", "derived_table1".                                                     │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.229645 │ datalake_etl │ axrate" AS "itemtaxrate", "derived_table1"."storeid" AS "storeid", "derived_table1"."reason" AS   │
+│                            │              │ "reason" FROM "ods"."mv_tbl__mv_mrms_inventorypurchaseorderline__0" AS "derived_table1")          │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.229645 │ datalake_etl │ edbaseinventoryquantity", "derived_table1"."purchaseunitconversion" AS "purchaseunitconversion",  │
+│                            │              │ "derived_table1"."inventoryitemid" AS "inventoryitemid", "derived_table1"."taxable" AS "taxable", │
+│                            │              │ "deri                                                                                             │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.229645 │ datalake_etl │ CREATE OR REPLACE VIEW "ods"."mv_mrms_inventorypurchaseorderline" AS (SELECT                      │
+│                            │              │ "derived_table1"."inventorypurchaseorderlineid" AS "inventorypurchaseorderlineid",                │
+│                            │              │ "derived_table1"."inventorypurchaseorder                                                          │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.224252 │ datalake_etl │ ALTER TABLE "ods"."mv_tbl__mv_mrms_inventorypurchaseorderline__0_recomputed" RENAME TO            │
+│                            │              │ "mv_tbl__mv_mrms_inventorypurchaseorderline__0"                                                   │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.189241 │ datalake_etl │ DROP TABLE "ods"."mv_tbl__mv_mrms_inventorypurchaseorderline__0"                                  │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.178822 │ datalake_etl │ ved_table1"."__$etl_lsn" AS "__$etl_lsn", "derived_table1"."overreceive" AS "overreceive",        │
+│                            │              │ "derived_table1"."short" AS "short", "derived_table1"."damaged" AS "damaged",                     │
+│                            │              │ "derived_table1"."lowquality" A                                                                   │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.178822 │ datalake_etl │ edbaseinventoryquantity", "derived_table1"."purchaseunitconversion" AS "purchaseunitconversion",  │
+│                            │              │ "derived_table1"."inventoryitemid" AS "inventoryitemid", "derived_table1"."taxable" AS "taxable", │
+│                            │              │ "deri                                                                                             │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.178822 │ datalake_etl │ "orderedquantity" AS "orderedquantity", "derived_table1"."deliveredquantity" AS                   │
+│                            │              │ "deliveredquantity", "derived_table1"."backorderquantity" AS "backorderquantity",                 │
+│                            │              │ "derived_table1"."returnedquantity" AS                                                            │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.178822 │ datalake_etl │ id" AS "inventorypurchaseorderid", "derived_table1"."vendorinventoryitemcode" AS                  │
+│                            │              │ "vendorinventoryitemcode", "derived_table1"."inventoryitemdescription" AS                         │
+│                            │              │ "inventoryitemdescription", "derived_table1".                                                     │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.178822 │ datalake_etl │ axrate" AS "itemtaxrate", "derived_table1"."storeid" AS "storeid", "derived_table1"."reason" AS   │
+│                            │              │ "reason" FROM "ods"."mv_tbl__mv_mrms_inventorypurchaseorderline__0_recomputed" AS                 │
+│                            │              │ "derived_table1")                                                                                 │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.178822 │ datalake_etl │ "returnedquantity", "derived_table1"."purchaseunitid" AS "purchaseunitid",                        │
+│                            │              │ "derived_table1"."purchaseunitprice" AS "purchaseunitprice", "derived_table1"."purchasevalue" AS  │
+│                            │              │ "purchasevalue", "derived_t                                                                       │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.178822 │ datalake_etl │ able1"."taxvalue" AS "taxvalue", "derived_table1"."taxpercentage" AS "taxpercentage",             │
+│                            │              │ "derived_table1"."inventoryunitid" AS "inventoryunitid",                                          │
+│                            │              │ "derived_table1"."orderedbaseinventoryquantity" AS "order                                         │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.178822 │ datalake_etl │ S "lowquality", "derived_table1"."overshelf" AS "overshelf",                                      │
+│                            │              │ "derived_table1"."vendorshippedquantity" AS "vendorshippedquantity",                              │
+│                            │              │ "derived_table1"."sellunitid" AS "sellunitid", "derived_table1"."itemt                            │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:12:54.178822 │ datalake_etl │ CREATE OR REPLACE VIEW "ods"."mv_mrms_inventorypurchaseorderline" AS (SELECT                      │
+│                            │              │ "derived_table1"."inventorypurchaseorderlineid" AS "inventorypurchaseorderlineid",                │
+│                            │              │ "derived_table1"."inventorypurchaseorder                                                          │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ ndoracknowledgeddate" AS "vendoracknowledgeddate", "derived_table1"."vendoracknowledgedby" AS     │
+│                            │              │ "vendoracknowledgedby", "derived_table1"."dispatched" AS "dispatched",                            │
+│                            │              │ "derived_table1"."dispatchedddate"                                                                │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ nt", "derived_table1"."reconcilliationcomment" AS "reconcilliationcomment",                       │
+│                            │              │ "derived_table1"."invoiceamount" AS "invoiceamount", "derived_table1"."invoicetaxamount" AS       │
+│                            │              │ "invoicetaxamount", "derived_tab                                                                  │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ ble1"."shippingaddressattention" AS "shippingaddressattention",                                   │
+│                            │              │ "derived_table1"."shippingaddressstore" AS "shippingaddressstore",                                │
+│                            │              │ "derived_table1"."shippingaddress1" AS "shippingaddress1", "derived_t                             │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ able1"."shippingaddress2" AS "shippingaddress2", "derived_table1"."shippingaddress3" AS           │
+│                            │              │ "shippingaddress3", "derived_table1"."invoicenumber" AS "invoicenumber",                          │
+│                            │              │ "derived_table1"."comment" AS "comment"                                                           │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ AS "paymentby", "derived_table1"."paymentdate" AS "paymentdate",                                  │
+│                            │              │ "derived_table1"."consolidatedinvoicenumber" AS "consolidatedinvoicenumber",                      │
+│                            │              │ "derived_table1"."approvedforpayment" AS "approvedforpayme                                        │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ CREATE OR REPLACE VIEW "ods"."mv_mrms_inventorypurchaseorder" AS (SELECT                          │
+│                            │              │ "derived_table1"."inventorypurchaseorderid" AS "inventorypurchaseorderid",                        │
+│                            │              │ "derived_table1"."orderdate" AS "orderdate", "derive                                              │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ rytime" FROM "ods"."mv_tbl__mv_mrms_inventorypurchaseorder__0" AS "derived_table1")               │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ AS "dispatchedddate", "derived_table1"."dispatchedby" AS "dispatchedby",                          │
+│                            │              │ "derived_table1"."received" AS "received", "derived_table1"."receivedby" AS "receivedby",         │
+│                            │              │ "derived_table1"."invoiced" AS "invoi                                                             │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ e", "derived_table1"."frozenfoodtemperature" AS "frozenfoodtemperature",                          │
+│                            │              │ "derived_table1"."inventorysalesorderid" AS "inventorysalesorderid",                              │
+│                            │              │ "derived_table1"."adjusteddeliverytime" AS "adjusteddelive                                        │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ , "derived_table1"."lastupdatedate" AS "lastupdatedate", "derived_table1"."storeid" AS "storeid", │
+│                            │              │ "derived_table1"."status" AS "status", "derived_table1"."vendorid" AS "vendorid",                 │
+│                            │              │ "derived_table1"."ve                                                                              │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ horizedby" AS "authorizedby", "derived_table1"."authorizedate" AS "authorizedate",                │
+│                            │              │ "derived_table1"."lastupdatedby" AS "lastupdatedby", "derived_table1"."paid" AS "paid",           │
+│                            │              │ "derived_table1"."paymentby"                                                                      │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ d_table1"."applieddate" AS "applieddate", "derived_table1"."requiredate" AS "requiredate",        │
+│                            │              │ "derived_table1"."receivedate" AS "receivedate", "derived_table1"."taxablevalue" AS               │
+│                            │              │ "taxablevalue", "derived_                                                                         │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ table1"."nontaxablevalue" AS "nontaxablevalue", "derived_table1"."taxvalue" AS "taxvalue",        │
+│                            │              │ "derived_table1"."freightvalue" AS "freightvalue", "derived_table1"."ordertotal" AS "ordertotal", │
+│                            │              │ "derived_ta                                                                                       │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ ced", "derived_table1"."invoicereceiveddate" AS "invoicereceiveddate",                            │
+│                            │              │ "derived_table1"."invoicereceivedby" AS "invoicereceivedby", "derived_table1"."authorized" AS     │
+│                            │              │ "authorized", "derived_table1"."aut                                                               │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ ndorname" AS "vendorname", "derived_table1"."printdate" AS "printdate",                           │
+│                            │              │ "derived_table1"."printedby" AS "printedby", "derived_table1"."vendoracknowledged" AS             │
+│                            │              │ "vendoracknowledged", "derived_table1"."ve                                                        │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.273601 │ datalake_etl │ le1"."__$etl_lsn" AS "__$etl_lsn", "derived_table1"."receivingcomment" AS "receivingcomment",     │
+│                            │              │ "derived_table1"."serialno" AS "serialno", "derived_table1"."freshfoodtemperature" AS             │
+│                            │              │ "freshfoodtemperatur                                                                              │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:46.256889 │ datalake_etl │ ALTER TABLE "ods"."mv_tbl__mv_mrms_inventorypurchaseorder__0_recomputed" RENAME TO                │
+│                            │              │ "mv_tbl__mv_mrms_inventorypurchaseorder__0"                                                       │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:45.982509 │ datalake_etl │ DROP TABLE "ods"."mv_tbl__mv_mrms_inventorypurchaseorder__0"                                      │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:45.968475 │ datalake_etl │ le1"."__$etl_lsn" AS "__$etl_lsn", "derived_table1"."receivingcomment" AS "receivingcomment",     │
+│                            │              │ "derived_table1"."serialno" AS "serialno", "derived_table1"."freshfoodtemperature" AS             │
+│                            │              │ "freshfoodtemperatur                                                                              │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:45.968475 │ datalake_etl │ nt", "derived_table1"."reconcilliationcomment" AS "reconcilliationcomment",                       │
+│                            │              │ "derived_table1"."invoiceamount" AS "invoiceamount", "derived_table1"."invoicetaxamount" AS       │
+│                            │              │ "invoicetaxamount", "derived_tab                                                                  │
+├────────────────────────────┼──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2026-03-20 06:10:45.968475 │ datalake_etl │ , "derived_table1"."lastupdatedate" AS "lastupdatedate", "derived_table1"."storeid" AS "storeid", │
+│                            │              │ "derived_table1"."status" AS "status", "derived_table1"."vendorid" AS "vendorid",                 │
+│                            │              │ "derived_table1"."ve                                                                              │
+└────────────────────────────┴──────────────┴───────────────────────────────────────────────────────────────────────────────────────────────────┘

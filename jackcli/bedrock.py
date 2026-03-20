@@ -1,4 +1,4 @@
-"""AWS Bedrock integration for rsops explain command."""
+"""AWS Bedrock integration for jack explain command."""
 
 from __future__ import annotations
 
@@ -15,80 +15,81 @@ from .queries import (
     ETL_FAILURES_EXPLAIN_PROMPT,
     TABLE_HEALTH_EXPLAIN_PROMPT,
     WLM_EXPLAIN_PROMPT,
-    DATASHARES_EXPLAIN_PROMPT,
-    CONNECTIONS_EXPLAIN_PROMPT,
-    COPY_STATUS_EXPLAIN_PROMPT,
-    VACUUM_PROGRESS_EXPLAIN_PROMPT,
     LOCKS_EXPLAIN_PROMPT,
     SPILL_EXPLAIN_PROMPT,
-    ALERTS_EXPLAIN_PROMPT,
-    SCALING_EXPLAIN_PROMPT,
     SKEW_EXPLAIN_PROMPT,
-    COMPRESSION_EXPLAIN_PROMPT,
     DEPS_EXPLAIN_PROMPT,
     STALE_TABLES_EXPLAIN_PROMPT,
     AUDIT_EXPLAIN_PROMPT,
     MCD_ETL_STATUS_EXPLAIN_PROMPT,
     MCD_ETL_LOG_EXPLAIN_PROMPT,
+    MCD_VALUE_CHECK_EXPLAIN_PROMPT,
+    MCD_ETL_MISSING_EXPLAIN_PROMPT,
 )
 
 DEFAULT_MODEL = "apac.amazon.nova-pro-v1:0"
 DEFAULT_REGION = "ap-southeast-1"
 
 SYSTEM_PROMPT = """你是資深 Redshift DBA，專精於 RA3 叢集的日常維運與效能調優。
-分析使用者提供的 rsops 指令輸出，直接給出結論與建議，不要廢話。
+分析使用者提供的 jack 指令輸出，直接給出結論與建議，不要廢話。
 格式：Markdown，條列重點，用繁體中文回答。
 
 重要規則：
-- 每個建議行動必須同時附上兩個 code block：
-  1. 可直接執行的 rsops 指令（```bash ... ```）
-  2. 對應的原始 SQL（```sql ... ```）
-- drill down 步驟要具體，說明查什麼、為什麼查、預期看到什麼
-- 沒有 code block 的建議視為不完整"""
+- 分析要具體：說明為什麼異常、可能的根本原因、預期的影響範圍
+- drill-down 建議附上可直接在 DB 執行的 SQL（```sql ... ```），不要建議 CLI 指令
+- 如果資料正常，明確說「無異常」，不要硬湊建議
+- VACUUM / ANALYZE 只能建議，標注「需由有 admin 權限的帳號執行」，不要在 SQL 中給出執行語句"""
 
 PROMPT_REGISTRY: dict[str, str] = {
-    "long_queries": LONG_RUNNING_EXPLAIN_PROMPT,
-    "disk": DISK_EXPLAIN_PROMPT,
-    "etl_failures": ETL_FAILURES_EXPLAIN_PROMPT,
-    "table_health": TABLE_HEALTH_EXPLAIN_PROMPT,
-    "wlm": WLM_EXPLAIN_PROMPT,
-    "datashares": DATASHARES_EXPLAIN_PROMPT,
-    "connections": CONNECTIONS_EXPLAIN_PROMPT,
-    "copy_status": COPY_STATUS_EXPLAIN_PROMPT,
-    "vacuum_progress": VACUUM_PROGRESS_EXPLAIN_PROMPT,
-    "locks": LOCKS_EXPLAIN_PROMPT,
-    "spill": SPILL_EXPLAIN_PROMPT,
-    "alerts": ALERTS_EXPLAIN_PROMPT,
-    "scaling": SCALING_EXPLAIN_PROMPT,
-    "skew": SKEW_EXPLAIN_PROMPT,
-    "compression": COMPRESSION_EXPLAIN_PROMPT,
-    "deps": DEPS_EXPLAIN_PROMPT,
-    "stale_tables": STALE_TABLES_EXPLAIN_PROMPT,
-    "audit": AUDIT_EXPLAIN_PROMPT,
-    "mcd_etl_status": MCD_ETL_STATUS_EXPLAIN_PROMPT,
-    "mcd_etl_log": MCD_ETL_LOG_EXPLAIN_PROMPT,
-    "morning": """
-這是 Redshift cluster 早晨例行巡檢報告，涵蓋磁碟、連線、長查詢、WLM、ETL 錯誤、COPY 狀態、表健康度、VACUUM 進度。
+    "long_queries":     LONG_RUNNING_EXPLAIN_PROMPT,
+    "disk":             DISK_EXPLAIN_PROMPT,
+    "etl_failures":     ETL_FAILURES_EXPLAIN_PROMPT,
+    "table_health":     TABLE_HEALTH_EXPLAIN_PROMPT,
+    "wlm":              WLM_EXPLAIN_PROMPT,
+    "locks":            LOCKS_EXPLAIN_PROMPT,
+    "spill":            SPILL_EXPLAIN_PROMPT,
+    "skew":             SKEW_EXPLAIN_PROMPT,
+    "deps":             DEPS_EXPLAIN_PROMPT,
+    "stale_tables":     STALE_TABLES_EXPLAIN_PROMPT,
+    "audit":            AUDIT_EXPLAIN_PROMPT,
+    "mcd_etl_status":   MCD_ETL_STATUS_EXPLAIN_PROMPT,
+    "mcd_etl_log":      MCD_ETL_LOG_EXPLAIN_PROMPT,
+    "mcd_value_check":  MCD_VALUE_CHECK_EXPLAIN_PROMPT,
+    "mcd_etl_missing":  MCD_ETL_MISSING_EXPLAIN_PROMPT,
+    "daily": """
+這是 Redshift daily 巡檢報告，涵蓋 WLM、ETL 錯誤、MCD ETL 狀態與日誌、資料新鮮度。
 請產出：
 1. 整體健康狀況（一句話摘要）
 2. 今天需要立刻處理的事項（條列，沒有就寫「無」）
 3. 今天需要留意但不緊急的事項（條列，沒有就寫「無」）
-4. 各項目無異常確認清單
+""",
+    "weekly": """
+這是 Redshift weekly 巡檢報告，涵蓋近兩週慢查詢、廢棄備份表、DDL 異動紀錄。
+請產出：
+1. 需要追蹤的慢查詢（user 與 query pattern）
+2. 建議清理的廢棄表清單
+3. 值得注意的 DDL 異動
+""",
+    "monthly": """
+這是 Redshift monthly 巡檢報告，涵蓋磁碟用量、table health、data skew。
+請產出：
+1. 磁碟用量評估（是否需要關注）
+2. 需要 DBA 處理的 table 維護清單（注意：本工具不執行 VACUUM/ANALYZE，僅提供報告）
+3. Skew 問題表與建議的 distribution key 調整（需 DBA 執行 DDL）
 """,
     "incident": """
-這是 Redshift 事件診斷報告，涵蓋 locks、spill、optimizer alerts、long queries、concurrency scaling。
+這是 Redshift 事件診斷報告，涵蓋 locks 與 spill to disk。
 請產出：
-1. 問題根因判斷（最可能的原因）
-2. 受影響範圍（哪些表、哪些 query、哪些使用者）
-3. 建議立即行動（依優先順序，包含具體指令）
+1. 問題根因判斷
+2. 受影響範圍
+3. 建議立即行動（kill 指令需由有 admin 權限的帳號執行）
 4. 後續預防建議
 """,
     "maintain": """
-這是 Redshift 維護報告，涵蓋 table health、vacuum progress、stale tables。
+這是 Redshift 維護報告，涵蓋廢棄備份表與 DDL 異動紀錄。
 請產出：
-1. 本次維護優先清單（VACUUM / ANALYZE / 刪表，依影響排序）
-2. 預估維護時間
-3. 建議執行的具體指令
+1. 建議清理的廢棄表清單（含 DROP TABLE IF EXISTS SQL）
+2. 值得注意的 DDL 異動摘要
 """,
 }
 
